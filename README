@@ -2,3 +2,19 @@ Ce script a été crée pour mes besoins personnels.
 Si vous souhaitez le modifier et le partager, aucun soucis. Faites moi signe de vos modifications.
 
 Merci d'avance.
+# Media Server Recovery
+Code source de mon script
+
+***Fonctions :***
+* Installation et réglages de : Samba, Transmission, SickRage, CouchPotato, PlexMediaServer
+
+
+***Installation :***
+```bash
+cd
+git clone https://github.com/valounours/MediaServerRecovery.git mediaserverrecovery
+cd mediaserverrecovery
+bash install.sh
+```
+***INFO :***
+De base le dossier d'installation des données est "/home" (Courant sur les serveur), pour le changer éditer le script et changer la variable "DIRDATA" en début de fichier
