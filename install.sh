@@ -74,15 +74,9 @@ maison_pgrm
 transmission () {
 debconf-apt-progress -- apt-get -y install transmission-daemon
 mkdir $DIRDATA/torrent
-mkdir $DIRDATA/torrent/encours
-mkdir $DIRDATA/torrent/fini
-mkdir $DIRDATA/torrent/watch
-chgrp debian-transmission $DIRDATA/torrent/encours
-chgrp debian-transmission $DIRDATA/torrent/fini
-chgrp debian-transmission $DIRDATA/torrent/watch
-chmod -R 770 $DIRDATA/torrent/encours
-chmod -R 770 $DIRDATA/torrent/fini
-chmod -R 770 $DIRDATA/torrent/watch
+mkdir -p  $DIRDATA/torrent/{"encours","fini","watch"}
+chgrp exrat $DIRDATA/torrent/{"encours","fini","watch"}
+chmod -R 770 $DIRDATA/torrent/{"encours","fini","watch"}
 service transmission-daemon stop
 #Réglages des dossiers
 sed -i "s|^.*\"download-dir\":.*|    \"download-dir\": \"$DIRDATA\/torrent\/fini\"\,|" /etc/transmission-daemon/settings.json
