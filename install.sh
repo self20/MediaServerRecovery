@@ -75,7 +75,7 @@ transmission () {
 debconf-apt-progress -- apt-get -y install transmission-daemon
 mkdir $DIRDATA/torrent
 mkdir -p  $DIRDATA/torrent/{"encours","fini","watch"}
-chgrp exrat $DIRDATA/torrent/{"encours","fini","watch"}
+chgrp debian-transmission $DIRDATA/torrent/{"encours","fini","watch"}
 chmod -R 770 $DIRDATA/torrent/{"encours","fini","watch"}
 service transmission-daemon stop
 #Réglages des dossiers
