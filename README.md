@@ -5,6 +5,8 @@ Merci d'avance.
 # Media Server Recovery
 Code source de mon script
 
+![MediaServerRecovery](http://img4.hostingpics.net/pics/710921demo.png)
+
 ***Fonctions :***
 * Installation et réglages de : Samba, Transmission, SickRage, CouchPotato, PlexMediaServer
 
