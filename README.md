@@ -20,4 +20,3 @@ bash install.sh
 ```
 ***INFO :***
 De base le dossier d'installation des données est "/home" (Courant sur les serveur), pour le changer éditer le script et changer la variable "DIRDATA" en début de fichier
-La varianle NDD au début du script n'est pas encore à utiliser !
