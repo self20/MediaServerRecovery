@@ -1,6 +1,5 @@
 #!/bin/sh
 DIRDATA='/home'
-NDD='localhost'
 clear
 # Check Root
 if [ $(id -u) != "0" ]; then
