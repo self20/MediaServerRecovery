@@ -1,9 +1,8 @@
 #!/bin/sh
 DIRDATA='/home'
-
+NDD='localhost'
 clear
 echo "Vérification Root :..."
-
 # Check Root
 if [ $(id -u) != "0" ]; then
     clear
@@ -12,7 +11,6 @@ if [ $(id -u) != "0" ]; then
 fi
 clear
 echo "Vérification Root : OK"
-
 #Debian only
 if [ ! -f /etc/debian_version ]; then 
     clear
@@ -22,58 +20,55 @@ fi
 clear
 echo "Vérification Root : OK !"
 echo "Vérification OS : OK !"
-
 # Installation des prérequis
-apt-get install whiptail
+apt-get install -y whiptail
+
+#############################
+#                           #
+# Début des fonctions       #
+#                           #
+#############################
 
 maison_pgrm () {
-OPTION=$(whiptail --title "Media Server Recovery" --menu "Faites votre choix ?" 15 60 5 \
-"1" "Samba" \
-"2" "Transmission" \
-"3" "SickRage"  \
-"4" "CouchPotato" \
-"5" "Plex Media Server" 5>&1 1>&2 2>&5)
+	OPTION=$(whiptail --title "Media Server Recovery" --menu "Faites votre choix ?" 15 80 5 \
+	"LAMP" "Serveur WEB avec Apache + MySQL + PhpMyAdmin" \
+	"Transmission" "Logiciel de téléchargement de Torrent" \
+	"SickRage" "Logiciel d'automatisation de téléchargement de séries"  \
+	"CouchPotato" "Logiciel d'automatisation de téléchargement de Films" \
+	"Plex" "Logiciel de streaming multimédia" 5>&1 1>&2 2>&5)
  
-exitstatus=$?
-if [ $exitstatus = 0 ]; then
-#Pré-Requis
-	if [ $OPTION = 1 ]; then
-		samba
+	exitstatus=$?
+	if [ $exitstatus = 0 ]; then
+	#Pré-Requis
+		if [ $OPTION = LAMP ]; then
+			lamp
+		fi
+		if [ $OPTION = Transmission ]; then
+			transmission
+		fi
+		if [ $OPTION = SickRage ]; then
+			sickrage
+		fi
+		if [ $OPTION = CouchPotato ]; then
+			couchpotato
+		fi
+		if [ $OPTION =Plex ]; then
+			plex
+		fi
+	else
+		clear
+		whiptail --title "Media Server Recovery" --msgbox "Au revoir." 10 60
 	fi
-	if [ $OPTION = 2 ]; then
-		transmission
-	fi
-	if [ $OPTION = 3 ]; then
-		sickrage
-	fi
-	if [ $OPTION = 4 ]; then
-		couchpotato
-	fi
-	if [ $OPTION = 5 ]; then
-		plex
-	fi
-else
-	clear
-	whiptail --title "Media Server Recovery" --msgbox "Au revoir." 10 60
-fi
 }
 
-samba () {
-debconf-apt-progress -- apt-get -y install samba
-service samba stop
-service smbd stop
-service nmbd stop
-echo -e "#Crée par le script de Valounours\nsecurity = share\n[Partage du dossier]\ncomment = Serveur\npath = $DIRDATA\nbrowseable = yes\nguest ok = yes\nwriteable = yes\npublic = yes\ncreate mask = 0777\ndirectory mask = 0777" >>  /etc/samba/smb.conf
-whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de SAMBA finis." 10 60
-service samba start
-service smbd start
-service nmbd start
+lamp () {
+debconf-apt-progress -- apt-get install lamp-server^ -y
+whiptail --title "Media Server Recovery" --msgbox "Votre serveur WEB est pret." 10 60
 maison_pgrm
 }
 
 transmission () {
 debconf-apt-progress -- apt-get -y install transmission-daemon
-mkdir $DIRDATA/torrent
 mkdir -p  $DIRDATA/torrent/{"encours","fini","watch"}
 chgrp debian-transmission $DIRDATA/torrent/{"encours","fini","watch"}
 chmod -R 770 $DIRDATA/torrent/{"encours","fini","watch"}
@@ -94,7 +89,7 @@ sed -i 's/.*"rpc-username":.*/    "rpc-username": '\"$TRANSWEBUSER\"',/' /etc/tr
 TRANSWEBPASS=$(whiptail --inputbox "Mot de passe ? (Pour l'interface WEB)" 8 78 "motdepasse" --title "Media Server Recovery" 3>&1 1>&2 2>&3)
 sed -i 's/.*"rpc-password":.*/    "rpc-password": '\"$TRANSWEBPASS\"',/' /etc/transmission-daemon/settings.json
 service transmission-daemon start
-whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de TRANSMISSION finis.\n \nTransmission est accessible depuis : http://IP:9091" 10 60
+whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de TRANSMISSION finis.\n \nTransmission est accessible depuis : http://torrent.$NDD" 10 60
 maison_pgrm
 }
 
@@ -134,33 +129,43 @@ whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de 
 maison_pgrm
 }
 
+
+#############################
+#                           #
+# Fin des fonctions         #
+#                           #
+#############################
+
 whiptail --title "Bienvenue" --msgbox "Créé par Valounours. Contact : Valounours@gmail.com" 10 60
 if (whiptail --title "Media Server Recovery" --yesno "Voulez-vous continuer ?" 10 60) then
-	OPTION=$(whiptail --title "Media Server Recovery" --menu "Faites votre choix ?" 15 60 5 \
-	"1" "Samba" \
-	"2" "Transmission" \
-	"3" "SickRage"  \
-	"4" "CouchPotato" \
-	"5" "Plex Media Server" 5>&1 1>&2 2>&5)
+	OPTION=$(whiptail --title "Media Server Recovery" --menu "Faites votre choix ?" 15 80 5 \
+	"LAMP" "Serveur WEB avec Apache + MySQL + PhpMyAdmin" \
+	"Transmission" "Logiciel de téléchargement de Torrent" \
+	"SickRage" "Logiciel d'automatisation de téléchargement de séries"  \
+	"CouchPotato" "Logiciel d'automatisation de téléchargement de Films" \
+	"Plex" "Logiciel de streaming multimédia" 5>&1 1>&2 2>&5)
  
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
 	#Pré-Requis
-		if [ $OPTION = 1 ]; then
-			samba
+		if [ $OPTION = LAMP ]; then
+			lamp
 		fi
-		if [ $OPTION = 2 ]; then
+		if [ $OPTION = Transmission ]; then
 			transmission
 		fi
-		if [ $OPTION = 3 ]; then
+		if [ $OPTION = SickRage ]; then
 			sickrage
 		fi
-		if [ $OPTION = 4 ]; then
+		if [ $OPTION = CouchPotato ]; then
 			couchpotato
 		fi
-		if [ $OPTION = 5 ]; then
+		if [ $OPTION = Plex ]; then
 			plex
 		fi
+	else
+		clear
+		whiptail --title "Media Server Recovery" --msgbox "Au revoir." 10 60
 	fi
 else
 	clear
