@@ -2,40 +2,30 @@
 DIRDATA='/home'
 NDD='localhost'
 clear
-echo "Vérification Root :..."
 # Check Root
 if [ $(id -u) != "0" ]; then
     clear
     echo "Vérification Root : Erreur... Vous n'etes pas root !"
     exit 1
 fi
-clear
-echo "Vérification Root : OK"
 #Debian only
 if [ ! -f /etc/debian_version ]; then 
     clear
     echo "Vérification OS : Ceci n'est pas une Débian !!"
     exit 1
 fi
-clear
-echo "Vérification Root : OK !"
-echo "Vérification OS : OK !"
 # Installation des prérequis
-apt-get install -y whiptail
-
-#############################
-#                           #
-# Début des fonctions       #
-#                           #
-#############################
+apt-get install -y whiptail unzip
+clear
 
 maison_pgrm () {
-	OPTION=$(whiptail --title "Media Server Recovery" --menu "Faites votre choix ?" 15 80 5 \
+	OPTION=$(whiptail --title "Media Server Recovery" --menu "Faites votre choix ?" 15 80 6 \
 	"LAMP" "Serveur WEB avec Apache + MySQL + PhpMyAdmin" \
 	"Transmission" "Logiciel de téléchargement de Torrent" \
 	"SickRage" "Logiciel d'automatisation de téléchargement de séries"  \
 	"CouchPotato" "Logiciel d'automatisation de téléchargement de Films" \
-	"Plex" "Logiciel de streaming multimédia" 5>&1 1>&2 2>&5)
+	"Plex" "Logiciel de streaming multimédia" \
+	"ESM" "Monitorer votre serveur" 5>&1 1>&2 2>&5)
  
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
@@ -52,8 +42,11 @@ maison_pgrm () {
 		if [ $OPTION = CouchPotato ]; then
 			couchpotato
 		fi
-		if [ $OPTION =Plex ]; then
+		if [ $OPTION = Plex ]; then
 			plex
+		fi
+		if [ $OPTION = ESM ]; then
+			esm
 		fi
 	else
 		clear
@@ -129,21 +122,24 @@ whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de 
 maison_pgrm
 }
 
-
-#############################
-#                           #
-# Fin des fonctions         #
-#                           #
-#############################
+esm () {
+wget --content-disposition  http://ezservermonitor.com/esm-web/downloads/version/2.5
+unzip ezservermonitor-web_v2.5.zip
+mv eZServerMonitor-2.5/ esm
+cp esm /var/www/html
+whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de ESM finis.\n \nESM est accessible depuis : http://NDD/esm" 10 60
+maison_pgrm
+}
 
 whiptail --title "Bienvenue" --msgbox "Créé par Valounours. Contact : Valounours@gmail.com" 10 60
 if (whiptail --title "Media Server Recovery" --yesno "Voulez-vous continuer ?" 10 60) then
-	OPTION=$(whiptail --title "Media Server Recovery" --menu "Faites votre choix ?" 15 80 5 \
+	OPTION=$(whiptail --title "Media Server Recovery" --menu "Faites votre choix ?" 15 80 6 \
 	"LAMP" "Serveur WEB avec Apache + MySQL + PhpMyAdmin" \
 	"Transmission" "Logiciel de téléchargement de Torrent" \
 	"SickRage" "Logiciel d'automatisation de téléchargement de séries"  \
 	"CouchPotato" "Logiciel d'automatisation de téléchargement de Films" \
-	"Plex" "Logiciel de streaming multimédia" 5>&1 1>&2 2>&5)
+	"Plex" "Logiciel de streaming multimédia" \
+	"ESM" "Monitorer votre serveur" 5>&1 1>&2 2>&5)
  
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
@@ -162,6 +158,9 @@ if (whiptail --title "Media Server Recovery" --yesno "Voulez-vous continuer ?" 1
 		fi
 		if [ $OPTION = Plex ]; then
 			plex
+		fi
+		if [ $OPTION = ESM ]; then
+			esm
 		fi
 	else
 		clear
