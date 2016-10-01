@@ -1,6 +1,5 @@
 #!/bin/sh
 DIRDATA='/home'
-NDD='localhost'
 clear
 # Check Root
 if [ $(id -u) != "0" ]; then
@@ -55,7 +54,7 @@ maison_pgrm () {
 }
 
 lamp () {
-debconf-apt-progress -- apt-get install lamp-server^ -y
+debconf-apt-progress -- apt-get install apache2 libapache2-mod-php5 mysql-server php5-mysql phpmyadmin -y
 whiptail --title "Media Server Recovery" --msgbox "Votre serveur WEB est pret." 10 60
 maison_pgrm
 }
@@ -82,7 +81,7 @@ sed -i 's/.*"rpc-username":.*/    "rpc-username": '\"$TRANSWEBUSER\"',/' /etc/tr
 TRANSWEBPASS=$(whiptail --inputbox "Mot de passe ? (Pour l'interface WEB)" 8 78 "motdepasse" --title "Media Server Recovery" 3>&1 1>&2 2>&3)
 sed -i 's/.*"rpc-password":.*/    "rpc-password": '\"$TRANSWEBPASS\"',/' /etc/transmission-daemon/settings.json
 service transmission-daemon start
-whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de TRANSMISSION finis.\n \nTransmission est accessible depuis : http://torrent.$NDD" 10 60
+whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de TRANSMISSION finis.\n \nTransmission est accessible depuis : http://IP:9091" 10 60
 maison_pgrm
 }
 
@@ -118,6 +117,7 @@ echo "deb http://shell.ninthgate.se/packages/debian jessie main" | tee -a /etc/a
 curl http://shell.ninthgate.se/packages/shell.ninthgate.se.gpg.key | apt-key add -
 apt-get update
 debconf-apt-progress -- apt-get install plexmediaserver -y
+echo -e "Y" > /dev/null 2>&1
 whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de PLEX finis.\n \nPlex est accessible depuis : http://IP:32400/web" 10 60
 maison_pgrm
 }
