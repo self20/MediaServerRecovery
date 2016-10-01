@@ -54,7 +54,7 @@ maison_pgrm () {
 }
 
 lamp () {
-debconf-apt-progress -- apt-get install lamp-server^ -y
+debconf-apt-progress -- apt-get install apache2 libapache2-mod-php5 mysql-server php5-mysql phpmyadmin -y
 whiptail --title "Media Server Recovery" --msgbox "Votre serveur WEB est pret." 10 60
 maison_pgrm
 }
@@ -116,7 +116,7 @@ debconf-apt-progress -- apt-get -y install curl
 echo "deb http://shell.ninthgate.se/packages/debian jessie main" | tee -a /etc/apt/sources.list.d/plexmediaserver.list
 curl http://shell.ninthgate.se/packages/shell.ninthgate.se.gpg.key | apt-key add -
 apt-get update
-debconf-apt-progress -- apt-get install plexmediaserver -y
+apt-get install plexmediaserver -y
 whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de PLEX finis.\n \nPlex est accessible depuis : http://IP:32400/web" 10 60
 maison_pgrm
 }
