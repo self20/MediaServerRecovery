@@ -72,6 +72,10 @@ chgrp debian-transmission $DIRDATA/torrent/{"encours","fini","watch"}
 chmod -R 770 $DIRDATA/torrent/{"encours","fini","watch"}
 echo -e '\n#proxy transmission \nProxyPass /transmission http://localhost:9091/transmission \nProxyPassReverse /transmission http://localhost:9091/transmission' >> /etc/apache2/sites-available/000-default.conf
 etc/init.d/apache2 restart
+#Réglages des dossiers
+sed -i "s|^.*\"download-dir\":.*|    \"download-dir\": \"$DIRDATA\/torrent\/fini\"\,|" /etc/transmission-daemon/settings.json
+sed -i "s|^.*\"incomplete-dir\":.*|    \"incomplete-dir\": \"$DIRDATA\/torrent\/encours\"\,|" /etc/transmission-daemon/settings.json
+sed -i "s|^.*\"incomplete-dir-enabled\":.*|    \"incomplete-dir-enabled\": true\,|" /etc/transmission-daemon/settings.json
 service transmission-daemon stop
 #Réglages de l'acces WEB
 if (whiptail --yesno "Acces par l'interface WEB ?" 8 78 --title "Media Server Recovery") then
@@ -81,10 +85,6 @@ if (whiptail --yesno "Acces par l'interface WEB ?" 8 78 --title "Media Server Re
 	sed -i 's/.*"rpc-username":.*/    "rpc-username": '\"$TRANSWEBUSER\"',/' /etc/transmission-daemon/settings.json
 	TRANSWEBPASS=$(whiptail --inputbox "Mot de passe ? (Pour l'interface WEB)" 8 78 "motdepasse" --title "Media Server Recovery" 3>&1 1>&2 2>&3)
 	sed -i 's/.*"rpc-password":.*/    "rpc-password": '\"$TRANSWEBPASS\"',/' /etc/transmission-daemon/settings.json
-	#Réglages des dossiers
-	sed -i "s|^.*\"download-dir\":.*|    \"download-dir\": \"$DIRDATA\/torrent\/fini\"\,|" /etc/transmission-daemon/settings.json
-	sed -i "s|^.*\"incomplete-dir\":.*|    \"incomplete-dir\": \"$DIRDATA\/torrent\/encours\"\,|" /etc/transmission-daemon/settings.json
-	sed -i "s|^.*\"incomplete-dir-enabled\":.*|    \"incomplete-dir-enabled\": true\,|" /etc/transmission-daemon/settings.json
 	service transmission-daemon start
 	whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de TRANSMISSION finis.\n \nTransmission est accessible depuis : http://IP/transmission" 10 60
 	maison_pgrm
