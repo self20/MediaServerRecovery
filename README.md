@@ -14,7 +14,7 @@ Code source de mon script
 ***Installation :***
 ```bash
 cd /tmp
-git clone https://github.com/valounours/MediaServerRecovery.git mediaserverrecovery
+git clone https://github.com/xavier84/MediaServerRecovery.git mediaserverrecovery
 cd mediaserverrecovery
 bash install.sh
 ```
