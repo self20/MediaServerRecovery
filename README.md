@@ -13,7 +13,7 @@ Code source de mon script
 
 ***Installation :***
 ```bash
-cd
+cd /tmp
 git clone https://github.com/valounours/MediaServerRecovery.git mediaserverrecovery
 cd mediaserverrecovery
 bash install.sh
