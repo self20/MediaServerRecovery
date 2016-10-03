@@ -127,9 +127,10 @@ echo -e "CP_HOME=/opt/couchpotato\nCP_USER=root" >> /etc/default/couchpotato
 chmod +x /etc/init.d/couchpotato
 update-rc.d couchpotato defaults
 service couchpotato start
+service couchpotato stop
 sleep 1
 sed -i -e "s/url_base =/url_base = \/couchpotato/g" /var/opt/couchpotato/settings.conf
-service couchpotato restart
+service couchpotato start
 echo -e '\n#proxy couchpotato \nProxyPass /couchpotato http://localhost:5050/couchpotato \nProxyPassReverse /couchpotato http://localhost:5050/couchpotato' >> /etc/apache2/sites-available/000-default.conf
 /etc/init.d/apache2 restart
 whiptail --title "Media Server Recovery" --msgbox "Installation et réglages de COUCHPOTATO finis.\n \nCouchPotato est accessible depuis : http://IP:couchpotato" 10 60
